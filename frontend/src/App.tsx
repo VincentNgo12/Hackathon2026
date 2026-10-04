@@ -1,121 +1,86 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
+import { ImuViewport } from './ImuViewport'
+import { useTelemetryStore } from './telemetryStore'
+import { useTelemetrySocket } from './useTelemetrySocket'
+
+function value(metric: number | undefined, suffix = '', digits = 0) {
+  return metric === undefined ? '—' : `${metric.toFixed(digits)}${suffix}`
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  useTelemetrySocket()
+  const connectionState = useTelemetryStore((state) => state.connectionState)
+  const telemetry = useTelemetryStore((state) => state.telemetry)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <main>
+      <header>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+          <p className="eyebrow">NatHacks 2026</p>
+          <h1>T'Work It</h1>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="status-row">
+          <span className={`status ${connectionState}`}>{connectionState}</span>
+          <span>System: {telemetry?.system_status ?? 'waiting'}</span>
+          <span>Source: {telemetry?.connection.source ?? 'waiting'}</span>
+          <span className={`risk ${telemetry?.overall_risk ?? 'unknown'}`}>
+            Risk: {telemetry?.overall_risk ?? '—'}
+          </span>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+      </header>
+
+      <section className="dashboard">
+        <article className="panel hero-panel">
+          <div className="panel-heading">
+            <div>
+              <p className="eyebrow">3D proof of life</p>
+              <h2>Back IMU positions</h2>
+            </div>
+            <span>Drag to orbit</span>
+          </div>
+          <ImuViewport imus={telemetry?.imus} />
+        </article>
+
+        <div className="metrics">
+          <article className="panel metric-card">
+            <h2>Posture</h2>
+            <dl>
+              <div><dt>Lumbar flexion</dt><dd>{value(telemetry?.posture.lumbar_flexion_deg, '°', 1)}</dd></div>
+              <div><dt>Thoracic flexion</dt><dd>{value(telemetry?.posture.thoracic_flexion_deg, '°', 1)}</dd></div>
+            </dl>
+          </article>
+
+          <article className="panel metric-card">
+            <h2>Worker state</h2>
+            <dl>
+              <div><dt>Heart rate</dt><dd>{value(telemetry?.heart_rate_bpm, ' bpm')}</dd></div>
+              <div><dt>Fall state</dt><dd>{telemetry?.fall_state ?? '—'}</dd></div>
+            </dl>
+          </article>
+
+          <article className="panel metric-card">
+            <h2>Environment</h2>
+            <dl className="compact">
+              <div><dt>Temperature</dt><dd>{value(telemetry?.environment.temperature_c, ' °C', 1)}</dd></div>
+              <div><dt>Humidity</dt><dd>{value(telemetry?.environment.humidity_percent, '%')}</dd></div>
+              <div><dt>Air quality</dt><dd>{value(telemetry?.environment.air_quality_index)}</dd></div>
+              <div><dt>Noise</dt><dd>{value(telemetry?.environment.noise_relative_db, ' dB', 1)}</dd></div>
+              <div><dt>Light</dt><dd>{value(telemetry?.environment.light_lux, ' lux')}</dd></div>
+            </dl>
+          </article>
+
+          <article className="panel metric-card">
+            <h2>EEG placeholders</h2>
+            <dl>
+              <div><dt>Alertness</dt><dd>{value(telemetry ? telemetry.eeg.alertness * 100 : undefined, '%')}</dd></div>
+              <div><dt>Signal quality</dt><dd>{value(telemetry ? telemetry.eeg.signal_quality * 100 : undefined, '%')}</dd></div>
+            </dl>
+          </article>
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <footer>Synthetic scaffold data only — not a medical or safety-certified system.</footer>
+    </main>
   )
 }
 
