@@ -1,0 +1,159 @@
+# =========================
+# OS / Editor
+# =========================
+
+.DS_Store
+Thumbs.db
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+*.swp
+*.swo
+
+
+# =========================
+# Secrets / Environment
+# =========================
+
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.crt
+
+# Wi-Fi / local credentials
+secrets.h
+credentials.h
+
+
+# =========================
+# Python backend
+# =========================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.egg-info/
+.eggs/
+dist/
+build/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+backend/.venv/
+backend/venv/
+
+# Optional local data / logs
+*.log
+
+
+# =========================
+# Node / Vite / React
+# =========================
+
+frontend/node_modules/
+frontend/dist/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite cache
+frontend/.vite/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+
+# =========================
+# PlatformIO / ESP32
+# =========================
+
+firmware/.pio/
+firmware/.pioenvs/
+firmware/.piolibdeps/
+
+# PlatformIO / project-local IDE metadata
+firmware/.vscode/
+
+# Compiled firmware artifacts
+*.bin
+*.elf
+*.hex
+*.map
+
+
+# =========================
+# C / C++
+# =========================
+
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.dylib
+
+# Coverage / profiling
+*.gcda
+*.gcno
+*.gcov
+
+
+# =========================
+# Simulator / recordings
+# =========================
+
+# Keep source scripts, ignore generated outputs
+simulator/output/
+simulator/generated/
+
+# Local/raw recordings can become huge
+recordings/*
+!recordings/README.md
+!recordings/.gitkeep
+
+
+# =========================
+# Data / temporary files
+# =========================
+
+tmp/
+temp/
+.cache/
+
+*.tmp
+*.bak
+
+
+# =========================
+# Jupyter / Python scratch
+# =========================
+
+.ipynb_checkpoints/
+
+
+# =========================
+# Build / generated docs
+# =========================
+
+docs/generated/
+
+
+# =========================
+# Optional local models/assets
+# =========================
+
+# Uncomment later if generated/large 3D assets should stay local
+# frontend/public/models/generated/
