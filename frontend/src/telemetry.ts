@@ -2,7 +2,8 @@ export type ConnectionState = 'connecting' | 'connected' | 'disconnected'
 export type TelemetrySource = 'simulated' | 'replay' | 'hardware'
 export type DeviceStatus = ConnectionState | 'simulated'
 export type ImuRegion = 'pelvis' | 'lumbar' | 'thoracic' | 'upper_thoracic'
-export type RiskLevel = 'low' | 'moderate' | 'high'
+// Target vocabulary from docs/TELEMETRY_PROTOCOL.md; legacy values remain valid.
+export type RiskLevel = 'low' | 'moderate' | 'elevated' | 'high'
 
 export interface QuaternionTelemetry {
   w: number
